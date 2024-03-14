@@ -20,6 +20,7 @@ public class ProductController {
     private ProductServiceImpl productService;
     @RequestMapping("/product")
     public String home (Model model) {
+        model.addAttribute("check", false);
         model.addAttribute("products", productService.findAll());
         return "product/index";
     }
@@ -36,18 +37,21 @@ public class ProductController {
         productService.generateExcel(response);
     }
     @PostMapping("/uploadProductFile")
-    public String upload(@RequestParam("productFile")MultipartFile file){
+    public String upload(@RequestParam("productFile")MultipartFile file, Model model){
         String fileName = file.getOriginalFilename();
         if (fileName.contains(".csv")){
-            System.out.println(1);
             try {
-                file.transferTo(new File("C:\\Module 5\\demo1\\src\\main\\resources\\uploads" + fileName));
-                productService.saveCustomerData(fileName);
+                file.transferTo(new File("C:\\Module 5\\demo1\\src\\main\\resources\\uploads\\" + fileName));
+                if (productService.saveProductData(fileName)){
+                    return "redirect:/product";
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-        return "redirect:/product";
+        model.addAttribute("check", true);
+        model.addAttribute("products", productService.findAll());
+        return "product/index";
     }
 
 

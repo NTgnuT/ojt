@@ -97,10 +97,10 @@
                             </a></span>
                             </div>
                         </form>
-                        <form action="" enctype="multipart/form-data" method="post">
+                        <form action="/uploadStoreFile" enctype="multipart/form-data" method="post">
                             <label for="file-input" class="file-label btn btn-info mt-2">
                                 <input type="file" id="file-input" class="file-input" onchange="this.form.submit()"
-                                       name="productFile">
+                                       name="storeFile">
                                 <span class="btn-icon-start text-info"><i class="fa fa-plus color-info"></i></span>
                                 Nhập file
                             </label>
@@ -115,38 +115,15 @@
                             <thead>
                             <tr>
                                 <th><strong>ID</strong></th>
-                                <th><strong>Tên danh mục</strong></th>
-                                <th><strong>Mô tả</strong></th>
-                                <!--                                <th><strong>Danh mục cha</strong></th>-->
-                                <th><strong>Trạng thái</strong></th>
-                                <th><strong>Hành động</strong></th>
+                                <th><strong>Địa chỉ</strong></th>
+                                <th><strong>Ngày nhập</strong></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="cat: ${list}">
-                                <td th:text="${cat.categoryId}"><strong></strong></td>
-                                <td class="text-center" th:text="${cat.categoryName}"></td>
-                                <td th:text="${#strings.length(cat.description) &gt; 20 ? #strings.substring(cat.description, 0, 20) + '...' : cat.description}"></td>
-                                <!--                                <td>-->
-                                <!--                                    <span th:each="parent:${list}" th:if="${parent.categoryId == cat.parent_id}"-->
-                                <!--                                          th:text="${cat.categoryName}"></span>-->
-                                <!--                                </td>-->
-                                <td>
-                                    <span class="d-flex align-items-center justify-content-center">
-                                        <i class="fa fa-circle me-1"
-                                           th:classappend="${cat.status} ? 'text-success' : 'text-danger'"></i>
-                                        <div th:text="${cat.status ? 'Active' : 'Block'}"></div>
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        <a th:href="@{/admin/category/edit/{id}(id = ${cat.categoryId})}"
-                                           class="btn btn-primary shadow btn-xs sharp me-1" ><i class="fa fa-pencil"></i></a>
-                                        <a th:href="@{/admin/category/change/{id}(id = ${cat.categoryId})}"
-                                           class="btn btn-danger shadow btn-xs sharp"><i
-                                                class="fa fa-arrow-rotate-backward"></i></a>
-                                    </div>
-                                </td>
+                            <tr th:each="store : ${stores}">
+                                <td th:text="${store.storeId}"><strong></strong></td>
+                                <td class="text-center" th:text="${store.homeNumber + ', ' + store.street + ', ' + store.district + ', ' + store.city}"></td>
+                                <td class="text-center" th:text="${store.createDate}"></td>
                             </tr>
                             </tbody>
                         </table>

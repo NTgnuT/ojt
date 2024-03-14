@@ -11,17 +11,36 @@
         opacity: 0;
         cursor: pointer;
     }
+    .error-container{
+        background-color: transparent;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 99999999999;
+    }
+    .error-box{
+        padding: 5rem;
+        background-color: #0c0c0c;
+    }
 </style>
 <body>
 
-<!--    Preloader start-->
 <div id="preloader">
     <div>
         <img th:src="@{images/pre.gif}" alt="">
     </div>
 </div>
-<!--    Preloader end-->
-
+<form action="/product" th:if="${check}" class="error-container">
+    <div class="error-box">
+        <p>File import lỗi!</p>
+        <button class="btn btn-success">Ok</button>
+    </div>
+</form>
 <!--    Main wrapper start-->
 <div id="main-wrapper">
     <!--        Nav header start-->
@@ -128,7 +147,7 @@
                                 <td class="text-center" th:text="${pro.productName}"></td>
                                 <td class="text-center" th:text="${pro.createDate}"></td>
                                 <td class="text-center" th:text="${pro.price}"></td>
-                                <td class="text-center" th:text="${pro.quanity}"></td>
+                                <td class="text-center" th:text="${pro.quantity}"></td>
                             </tr>
                             </tbody>
                         </table>

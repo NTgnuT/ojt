@@ -6,7 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Entity
 @AllArgsConstructor
@@ -16,12 +16,12 @@ import java.sql.Timestamp;
 @Builder
 
 public class Store {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long storeId;
-    private String address;
-    private Timestamp createDate;
-
-
+    private String homeNumber;
+    private String street;
+    private String district;
+    private String city;
+    private Date createDate;
 }

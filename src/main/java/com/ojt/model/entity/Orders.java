@@ -20,12 +20,8 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name = "store_id", referencedColumnName = "storeId")
     private Store store;
-    @OneToMany(mappedBy = "history")
-    private Set<OrderDetails> historyDetails;
+    @OneToMany(mappedBy = "orders")
+    private Set<OrderDetails> orderDetails;
     private Timestamp createDate;
-
-
-
-
-
+    private String phoneNumber;
 }

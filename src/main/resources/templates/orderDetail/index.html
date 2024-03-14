@@ -3,8 +3,8 @@
 
 <!--head-->
 <th:block th:insert="~{layouts/head.html}"></th:block>
-
 <style>
+
     .file-input {
         position: absolute;
         left: 0;
@@ -12,8 +12,14 @@
         opacity: 0;
         cursor: pointer;
     }
-</style>
 
+    .file-icon {
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 13px;
+    }
+</style>
 <body>
 
 <!--    Preloader start-->
@@ -74,12 +80,13 @@
                 <div class="card-body p-0 ms-5 me-5"
                      style="height: 70px; line-height: 70px; display: flex; justify-content: space-between">
                     <div class="tbl-caption">
-                        <h3 class="heading mb-0" style="line-height: 70px"><strong>Lịch sử đơn hàng</strong></h3>
+                        <h3 class="heading mb-0" style="line-height: 70px"><strong>Chi tiết đơn hàng</strong></h3>
                     </div>
                     <div class="header-right d-flex align-items-center">
                         <form th:action="@{/admin/category}" method="get">
                             <div class="input-group search-area ">
-                                <input type="text" class="form-control border rounded-start" name="search" placeholder="Tìm kiếm ...">
+                                <input type="text" class="form-control border rounded-start" name="search"
+                                       placeholder="Tìm kiếm ...">
                                 <span class="input-group-text border rounded-end "><a href="javascript:void(0)">
                                 <svg width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -99,14 +106,12 @@
                             </a></span>
                             </div>
                         </form>
-                        <form action="/uploadOrderFile" enctype="multipart/form-data" method="post">
-                            <label for="file-input" class="file-label btn btn-info mt-2">
-                                <input type="file" id="file-input" class="file-input" onchange="this.form.submit()"
-                                       name="orderFile">
-                                <span class="btn-icon-start text-info"><i class="fa fa-plus color-info"></i></span>
-                                Nhập file
-                            </label>
-                        </form>
+                        <a th:href="@{/order}">
+                            <button type="button" class="btn btn-info"><span
+                                    class="btn-icon-start text-info"><i class="fa-solid fa-arrow-left"></i>
+                                                            </span>Quay lại
+                            </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -117,50 +122,46 @@
                             <thead>
                             <tr>
                                 <th><strong>ID</strong></th>
-                                <th><strong>Ngày mua</strong></th>
-                                <th><strong>Mã cửa hàng</strong></th>
-                                <th><strong>Số điện thoại</strong></th>
-                                <th><strong>Chi tiết đơn hàng</strong></th>
+                                <th><strong>Tên sản phẩm</strong></th>
+                                <th><strong>Giá</strong></th>
+                                <th><strong>Số lượng</strong></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="order: ${orders}">
-                                <td th:text="${order.id}"><strong></strong></td>
-                                <td class="text-center" th:text="${order.createDate}"></td>
-                                <td class="text-center" th:text="${order.store.storeId}"></td>
-                                <td class="text-center" th:text="${order.phoneNumber}"></td>
-                                <td>
-                                    <a th:href="@{/orderDetail/{id}(id = ${order.id})}" class="btn btn-info shadow btn-xs sharp me-1" ><i class="fa fa-eye"></i></a>
-                                </td>
+                            <tr th:each="detail: ${orderDetail}">
+                                <td th:text="${detail.id}"><strong></strong></td>
+                                <td class="text-center" th:text="${detail.product.productName}"></td>
+                                <td class="text-center" th:text="${detail.price}"></td>
+                                <td class="text-center" th:text="${detail.quantity}"></td>
                             </tr>
                             </tbody>
                         </table>
 
-<!--                        <div class="d-flex justify-content-end mt-3 me-5">-->
-<!--                            <nav aria-label="Điều hướng trang">-->
-<!--                                <ul class="pagination">-->
-<!--                                    <li class="page-item ">-->
-<!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage > 1 ? currentPage - 1 : 1)}}" aria-label="Trước">-->
-<!--                                            <span aria-hidden="true" class="text-danger">&laquo;</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
+                        <!--                        <div class="d-flex justify-content-end mt-3 me-5">-->
+                        <!--                            <nav aria-label="Điều hướng trang">-->
+                        <!--                                <ul class="pagination">-->
+                        <!--                                    <li class="page-item ">-->
+                        <!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage > 1 ? currentPage - 1 : 1)}}" aria-label="Trước">-->
+                        <!--                                            <span aria-hidden="true" class="text-danger">&laquo;</span>-->
+                        <!--                                        </a>-->
+                        <!--                                    </li>-->
 
-<!--                                    <ul th:each="i : ${#numbers.sequence(1, totalPage)}">-->
-<!--                                        <li class="page-item" th:classappend="${i == currentPage ? 'active' : ''}">-->
-<!--                                            <a class="page-link" th:href="@{${'/admin/category/' + i}}">-->
-<!--                                                <span class="text-success" th:text="${i}"></span>-->
-<!--                                            </a>-->
-<!--                                        </li>-->
-<!--                                    </ul>-->
+                        <!--                                    <ul th:each="i : ${#numbers.sequence(1, totalPage)}">-->
+                        <!--                                        <li class="page-item" th:classappend="${i == currentPage ? 'active' : ''}">-->
+                        <!--                                            <a class="page-link" th:href="@{${'/admin/category/' + i}}">-->
+                        <!--                                                <span class="text-success" th:text="${i}"></span>-->
+                        <!--                                            </a>-->
+                        <!--                                        </li>-->
+                        <!--                                    </ul>-->
 
-<!--                                    <li class="page-item">-->
-<!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage < totalPage ? currentPage + 1 : totalPage)}}" aria-label="Tiếp theo">-->
-<!--                                            <span aria-hidden="true" class="text-danger">&raquo;</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </nav>-->
-<!--                        </div>-->
+                        <!--                                    <li class="page-item">-->
+                        <!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage < totalPage ? currentPage + 1 : totalPage)}}" aria-label="Tiếp theo">-->
+                        <!--                                            <span aria-hidden="true" class="text-danger">&raquo;</span>-->
+                        <!--                                        </a>-->
+                        <!--                                    </li>-->
+                        <!--                                </ul>-->
+                        <!--                            </nav>-->
+                        <!--                        </div>-->
 
                     </div>
                 </div>

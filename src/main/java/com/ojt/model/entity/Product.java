@@ -21,6 +21,6 @@ public class Product {
     private String productName;
     private Double price;
     private Date createDate;
-    private Integer quanity;
+    private Integer quantity;
 
 }

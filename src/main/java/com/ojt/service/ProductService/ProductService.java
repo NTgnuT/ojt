@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ProductService {
-    void saveCustomerData (String fileName);
+    boolean saveProductData (String fileName);
     void generateExcel (HttpServletResponse response) throws IOException;
     List<Product> findAll ();
 }

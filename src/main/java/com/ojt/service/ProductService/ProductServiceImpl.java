@@ -33,9 +33,9 @@ public class ProductServiceImpl implements ProductService {
     private LogImportService logImportService;
     String line = "";
     @Transactional
-    public void saveCustomerData(String fileName) {
+    public boolean saveProductData(String fileName) {
         try {
-            String pathFile = "C:\\Module 5\\demo1\\src\\main\\resources\\uploads" + fileName;
+            String pathFile = "C:\\Module 5\\demo1\\src\\main\\resources\\uploads\\" + fileName;
             Path pathToFile = Paths.get(pathFile);
             BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.UTF_8);
             int count = 1;
@@ -48,7 +48,7 @@ public class ProductServiceImpl implements ProductService {
                 String date = stringDate[2] + "-" + stringDate[1] + "-" + stringDate[0];
                 product.setCreateDate(Date.valueOf(date));
                 product.setPrice(Double.valueOf(data[2]));
-                product.setQuanity(Integer.valueOf(data[3]));
+                product.setQuantity(Integer.valueOf(data[3]));
                 Product pro = productRepository.findProductByProductName(product.getProductName());
                 switch (data[4]) {
                     case "create":
@@ -84,10 +84,9 @@ public class ProductServiceImpl implements ProductService {
             }
             File file = new File(pathFile);
             file.delete();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println(e);
+            return true;
+        }catch (Exception e) {
+            return false;
         }
     }
 
@@ -113,7 +112,7 @@ public class ProductServiceImpl implements ProductService {
             dataRow.createCell(1).setCellValue(product.getProductName());
             dataRow.createCell(2).setCellValue(product.getCreateDate());
             dataRow.createCell(3).setCellValue(product.getPrice());
-            dataRow.createCell(4).setCellValue(product.getQuanity());
+            dataRow.createCell(4).setCellValue(product.getQuantity());
 
 
             dataRowIndex++;
