@@ -1,15 +1,42 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <!--head-->
-<th:block th:insert="layouts/head.html"></th:block>
+<th:block th:insert="~{layouts/head.html}"></th:block>
+<style>
 
+    .file-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .file-icon {
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 10px;
+        font-size: 13px;
+    }
+</style>
 <body>
+
+<!--    Preloader start-->
 <div id="preloader">
     <div>
-        <img th:src="@{../static/images/pre.gif}" alt="">
+        <img th:src="@{images/pre.gif}" alt="">
     </div>
 </div>
+<!--    Preloader end-->
+
 <!--    Main wrapper start-->
 <div id="main-wrapper">
     <!--        Nav header start-->
@@ -60,12 +87,13 @@
                 <div class="card-body p-0 ms-5 me-5"
                      style="height: 70px; line-height: 70px; display: flex; justify-content: space-between">
                     <div class="tbl-caption">
-                        <h3 class="heading mb-0" style="line-height: 70px"><strong>Quản lý danh mục</strong></h3>
+                        <h3 class="heading mb-0" style="line-height: 70px"><strong>Lịch sử nhập file</strong></h3>
                     </div>
                     <div class="header-right d-flex align-items-center">
                         <form th:action="@{/admin/category}" method="get">
                             <div class="input-group search-area ">
-                                <input type="text" class="form-control border rounded-start" name="search" placeholder="Tìm kiếm ...">
+                                <input type="text" class="form-control border rounded-start" name="search"
+                                       placeholder="Tìm kiếm ...">
                                 <span class="input-group-text border rounded-end "><a href="javascript:void(0)">
                                 <svg width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -85,104 +113,22 @@
                             </a></span>
                             </div>
                         </form>
-                        <a th:href="@{/admin/category/add}">
-                            <button type="button" class="btn btn-info"><span
-                                    class="btn-icon-start text-info"><i class="fa fa-plus color-info"></i>
-                                                            </span>Thêm mới
-                            </button>
-                        </a>
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-responsive-md text-center ">
-                            <thead>
-                            <tr>
-                                <th><strong>ID</strong></th>
-                                <th><strong>Tên danh mục</strong></th>
-                                <th><strong>Mô tả</strong></th>
-                                <!--                                <th><strong>Danh mục cha</strong></th>-->
-                                <th><strong>Trạng thái</strong></th>
-                                <th><strong>Hành động</strong></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="cat: ${list}">
-                                <td th:text="${cat.categoryId}"><strong></strong></td>
-                                <td class="text-center" th:text="${cat.categoryName}"></td>
-                                <td th:text="${#strings.length(cat.description) &gt; 20 ? #strings.substring(cat.description, 0, 20) + '...' : cat.description}"></td>
-                                <!--                                <td>-->
-                                <!--                                    <span th:each="parent:${list}" th:if="${parent.categoryId == cat.parent_id}"-->
-                                <!--                                          th:text="${cat.categoryName}"></span>-->
-                                <!--                                </td>-->
-                                <td>
-                                    <span class="d-flex align-items-center justify-content-center">
-                                        <i class="fa fa-circle me-1"
-                                           th:classappend="${cat.status} ? 'text-success' : 'text-danger'"></i>
-                                        <div th:text="${cat.status ? 'Active' : 'Block'}"></div>
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        <a th:href="@{/admin/category/edit/{id}(id = ${cat.categoryId})}"
-                                           class="btn btn-primary shadow btn-xs sharp me-1" ><i class="fa fa-pencil"></i></a>
-                                        <a th:href="@{/admin/category/change/{id}(id = ${cat.categoryId})}"
-                                           class="btn btn-danger shadow btn-xs sharp"><i
-                                                class="fa fa-arrow-rotate-backward"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
 
-<!--                        <div class="d-flex justify-content-end mt-3 me-5">-->
-<!--                            <nav aria-label="Điều hướng trang">-->
-<!--                                <ul class="pagination">-->
-<!--                                    <li class="page-item ">-->
-<!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage > 1 ? currentPage - 1 : 1)}}" aria-label="Trước">-->
-<!--                                            <span aria-hidden="true" class="text-danger">&laquo;</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
-
-<!--                                    <ul th:each="i : ${#numbers.sequence(1, totalPage)}">-->
-<!--                                        <li class="page-item" th:classappend="${i == currentPage ? 'active' : ''}">-->
-<!--                                            <a class="page-link" th:href="@{${'/admin/category/' + i}}">-->
-<!--                                                <span class="text-success" th:text="${i}"></span>-->
-<!--                                            </a>-->
-<!--                                        </li>-->
-<!--                                    </ul>-->
-
-<!--                                    <li class="page-item">-->
-<!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage < totalPage ? currentPage + 1 : totalPage)}}" aria-label="Tiếp theo">-->
-<!--                                            <span aria-hidden="true" class="text-danger">&raquo;</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </nav>-->
-<!--                        </div>-->
-
-                    </div>
-                </div>
-            </div>
+            <div id="chartjs-bar"></div>
         </div>
     </div>
     <!--        Content body end-->
-
-    <!--            Footer-->
-    <div class="footer">
-        <div class="copyright">
-            <!--               <p>Copyright © Developed by <a href="https://dexignzone.com/" target="_blank">DexignZone</a> 2023</p>-->
-        </div>
-    </div>
-
 
 </div>
 <!--    Scripts-->
 <th:block th:insert="~{layouts/script.html}"></th:block>
 
 </body>
-
 </html>
 
+
+</body>
+</html>

@@ -77,9 +77,11 @@
                         <h3 class="heading mb-0" style="line-height: 70px"><strong>Lịch sử đơn hàng</strong></h3>
                     </div>
                     <div class="header-right d-flex align-items-center">
-                        <form th:action="@{/admin/category}" method="get">
+                        <form method="get">
                             <div class="input-group search-area ">
-                                <input type="text" class="form-control border rounded-start" name="search" placeholder="Tìm kiếm ...">
+                                <input type="text" class="form-control border rounded-start" name="keyword"
+                                       th:value="${keyword}"
+                                       placeholder="Tìm kiếm ...">
                                 <span class="input-group-text border rounded-end "><a href="javascript:void(0)">
                                 <svg width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -119,6 +121,7 @@
                                 <th><strong>ID</strong></th>
                                 <th><strong>Ngày mua</strong></th>
                                 <th><strong>Mã cửa hàng</strong></th>
+                                <th><strong>Địa chỉ cửa hàng</strong></th>
                                 <th><strong>Số điện thoại</strong></th>
                                 <th><strong>Chi tiết đơn hàng</strong></th>
                             </tr>
@@ -128,6 +131,7 @@
                                 <td th:text="${order.id}"><strong></strong></td>
                                 <td class="text-center" th:text="${order.createDate}"></td>
                                 <td class="text-center" th:text="${order.store.storeId}"></td>
+                                <td class="text-center" th:text="${order.store.homeNumber + ', ' + order.store.street + ', ' + order.store.district + ', ' + order.store.city }"></td>
                                 <td class="text-center" th:text="${order.phoneNumber}"></td>
                                 <td>
                                     <a th:href="@{/orderDetail/{id}(id = ${order.id})}" class="btn btn-info shadow btn-xs sharp me-1" ><i class="fa fa-eye"></i></a>
@@ -136,31 +140,34 @@
                             </tbody>
                         </table>
 
-<!--                        <div class="d-flex justify-content-end mt-3 me-5">-->
-<!--                            <nav aria-label="Điều hướng trang">-->
-<!--                                <ul class="pagination">-->
-<!--                                    <li class="page-item ">-->
-<!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage > 1 ? currentPage - 1 : 1)}}" aria-label="Trước">-->
-<!--                                            <span aria-hidden="true" class="text-danger">&laquo;</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
+                        <div class="d-flex justify-content-end mt-3 me-5">
+                            <nav aria-label="Điều hướng trang">
+                                <ul class="pagination">
+                                    <li class="page-item" th:if="${currentPage > 1}">
+                                        <a class="page-link" th:href="@{'?pageNo=' + ${currentPage - 1}}"
+                                           aria-label="Trước">
+                                            <span aria-hidden="true" class="text-danger">&laquo;</span>
+                                        </a>
+                                    </li>
 
-<!--                                    <ul th:each="i : ${#numbers.sequence(1, totalPage)}">-->
-<!--                                        <li class="page-item" th:classappend="${i == currentPage ? 'active' : ''}">-->
-<!--                                            <a class="page-link" th:href="@{${'/admin/category/' + i}}">-->
-<!--                                                <span class="text-success" th:text="${i}"></span>-->
-<!--                                            </a>-->
-<!--                                        </li>-->
-<!--                                    </ul>-->
+                                    <ul th:each="i : ${#numbers.sequence(1, totalPage)}">
+                                        <li class="page-item" th:classappend="${i == currentPage ? 'active' : ''}">
+                                            <a class="page-link"
+                                               th:href="@{${keyword != null && keyword != '' ? '?keyword=' + keyword + '&' : '?' } +'pageNo=' + ${i}}">
+                                                <span class="text-success" th:text="${i}"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
 
-<!--                                    <li class="page-item">-->
-<!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage < totalPage ? currentPage + 1 : totalPage)}}" aria-label="Tiếp theo">-->
-<!--                                            <span aria-hidden="true" class="text-danger">&raquo;</span>-->
-<!--                                        </a>-->
-<!--                                    </li>-->
-<!--                                </ul>-->
-<!--                            </nav>-->
-<!--                        </div>-->
+                                    <li class="page-item" th:if="${currentPage < totalPage}">
+                                        <a class="page-link" th:href="@{'?pageNo=' + ${currentPage + 1}}"
+                                           aria-label="Tiếp theo">
+                                            <span aria-hidden="true" class="text-danger">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
 
                     </div>
                 </div>

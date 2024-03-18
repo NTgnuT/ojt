@@ -1,7 +1,10 @@
 package com.ojt.controller;
 
+import com.ojt.model.entity.Store;
 import com.ojt.service.StoreService.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,9 +20,18 @@ public class StoreController {
     @Autowired
     private StoreService storeService;
     @RequestMapping("/store")
-    public String home(Model model) {
+    public String homeStore(Model model, @Param("keyword") String keyword,
+                       @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
+        Page<Store> stores = storeService.getAll(pageNo);
+        if (keyword != null) {
+            stores = storeService.searchStore(keyword, pageNo);
+        }
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("totalPage", stores.getTotalPages());
+        model.addAttribute("currentPage", pageNo);
+
         model.addAttribute("check", false);
-        model.addAttribute("stores", storeService.findAll());
+        model.addAttribute("stores", stores);
         return "store/index";
     }
     @PostMapping("/uploadStoreFile")

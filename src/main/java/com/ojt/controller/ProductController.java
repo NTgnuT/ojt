@@ -1,8 +1,14 @@
 package com.ojt.controller;
 
+import com.ojt.model.entity.Product;
 import com.ojt.service.ProductService.ProductServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,15 +19,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 public class ProductController {
     @Autowired
     private ProductServiceImpl productService;
     @RequestMapping("/product")
-    public String home (Model model) {
-        model.addAttribute("check", false);
-        model.addAttribute("products", productService.findAll());
+    public String homeProduct (Model model, @Param("keyword") String keyword,
+                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
+        Page<Product> products = productService.getAll(pageNo);
+        if (keyword != null) {
+            products = productService.searchProduct(keyword, pageNo);
+        }
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("totalPage", products.getTotalPages());
+        model.addAttribute("currentPage", pageNo);
+
+        model.addAttribute( "check", false);
+        model.addAttribute("products", products);
+
         return "product/index";
     }
 

@@ -9,6 +9,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,6 +126,22 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> findAll() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public Page<Product> getAll(Integer pageNo) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "productId");
+        Pageable pageable = PageRequest.of(pageNo-1, 5, sort);
+        return productRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Product> searchProduct(String keyword, Integer pageNo) {
+//        // Tạo đối tượng Pageable với phân trang và sắp xếp theo thứ tự ID giảm dần
+        Pageable pageable = PageRequest.of(pageNo-1, 5, Sort.by(Sort.Direction.DESC, "productId"));
+        Page<Product> page = productRepository.findAllByProductNameContainingIgnoreCase(keyword, pageable);
+
+        return page;
     }
 
 

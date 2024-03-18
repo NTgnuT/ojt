@@ -5,6 +5,8 @@ import com.ojt.model.entity.Orders;
 import com.ojt.service.OrderDetailService.OrderDetailService;
 import com.ojt.service.OrderService.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,19 @@ public class OrderController {
     @Autowired
     private OrderDetailService orderDetailService;
     @RequestMapping("/order")
-    public String home (Model model) {
+    public String home (Model model, @Param("keyword") String keyword,
+                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
+        Page<Orders> orders = orderService.getAll(pageNo);
+        if (keyword != null) {
+            orders = orderService.searchOrders(keyword, pageNo);
+        }
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("totalPage", orders.getTotalPages());
+        model.addAttribute("currentPage", pageNo);
+
         model.addAttribute("check", true);
-        model.addAttribute("orders", orderService.findAll());
+        model.addAttribute("orders", orders);
         return "order/index";
     }
     @PostMapping("/uploadOrderFile")
@@ -45,9 +57,19 @@ public class OrderController {
     }
 
     @GetMapping("/orderDetail/{id}")
-    public String orderDetail(@PathVariable("id") Long id, Model model) {
+    public String orderDetail(@PathVariable("id") Long id, Model model,
+                              @Param("keyword") String keyword,
+                              @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
         Orders orders = orderService.findById(id);
-        List<OrderDetails> orderDetails = orderDetailService.findAllByOrder(orders);
+
+        Page<OrderDetails> orderDetails = orderDetailService.getAll(orders, pageNo);
+        if (keyword != null) {
+            orderDetails = orderDetailService.searchOrderDetail(keyword, pageNo);
+        }
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPage", orderDetails.getTotalPages());
 
         model.addAttribute("orderDetail", orderDetails);
         return "orderDetail/index";

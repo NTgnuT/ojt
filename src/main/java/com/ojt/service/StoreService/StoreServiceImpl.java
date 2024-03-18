@@ -4,6 +4,10 @@ import com.ojt.model.entity.Store;
 import com.ojt.responsitoty.StoreRepository;
 import com.ojt.service.LogImportService.LogImportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -96,5 +100,20 @@ public class StoreServiceImpl implements StoreService{
     @Override
     public Store findByAddress(Store store) {
         return storeRepository.findStoreByCityAndDistrictAndStreetAndHomeNumberEqualsIgnoreCase(store.getCity(), store.getDistrict(), store.getStreet(), store.getHomeNumber());
+    }
+
+    @Override
+    public Page<Store> getAll(Integer pageNo) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "storeId");
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
+        return storeRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Store> searchStore(String keyword, Integer pageNo) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "storeId");
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
+        Page<Store> page = storeRepository.findStoreByCityContainingIgnoreCase(keyword, pageable);
+        return page;
     }
 }

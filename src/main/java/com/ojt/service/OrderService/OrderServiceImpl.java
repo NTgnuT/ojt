@@ -12,6 +12,11 @@ import com.ojt.service.LogImportService.LogImportService;
 import com.ojt.service.ProductService.ProductService;
 import com.ojt.service.StoreService.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -129,10 +134,26 @@ public class OrderServiceImpl implements OrderService{
         }catch (Exception e) {
             return false;
         }
+
     }
 
     @Override
     public Orders findById(Long id) {
         return orderRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Page<Orders> getAll(Integer pageNo) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
+        return orderRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Orders> searchOrders(String keyword, Integer pageNo) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
+        Page<Orders> page = orderRepository.findAllByPhoneNumberContainingIgnoreCase(keyword, pageable);
+        return page;
     }
 }
