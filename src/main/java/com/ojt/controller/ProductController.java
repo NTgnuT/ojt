@@ -3,6 +3,7 @@ package com.ojt.controller;
 import com.ojt.model.entity.Product;
 import com.ojt.service.ProductService.ProductServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,9 +26,14 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductServiceImpl productService;
+    @Autowired
+    private HttpSession httpSession;
     @RequestMapping("/product")
     public String homeProduct (Model model, @Param("keyword") String keyword,
                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
+        if (httpSession.getAttribute("userLogin") == null) {
+            return "redirect:/login";
+        }
         Page<Product> products = productService.getAll(pageNo);
         if (keyword != null) {
             products = productService.searchProduct(keyword, pageNo);

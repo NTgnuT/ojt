@@ -2,6 +2,7 @@ package com.ojt.controller;
 
 import com.ojt.model.entity.Store;
 import com.ojt.service.StoreService.StoreService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -19,9 +20,14 @@ import java.io.IOException;
 public class StoreController {
     @Autowired
     private StoreService storeService;
+    @Autowired
+    private HttpSession httpSession;
     @RequestMapping("/store")
     public String homeStore(Model model, @Param("keyword") String keyword,
                        @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
+        if (httpSession.getAttribute("userLogin") == null) {
+            return "redirect:/login";
+        }
         Page<Store> stores = storeService.getAll(pageNo);
         if (keyword != null) {
             stores = storeService.searchStore(keyword, pageNo);

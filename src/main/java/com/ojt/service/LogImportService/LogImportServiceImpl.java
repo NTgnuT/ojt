@@ -2,9 +2,14 @@ package com.ojt.service.LogImportService;
 
 import com.ojt.model.entity.LogDetail;
 import com.ojt.model.entity.LogImport;
+import com.ojt.model.entity.Store;
 import com.ojt.responsitoty.LogDetailRepository;
 import com.ojt.responsitoty.LogImportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +54,20 @@ public class LogImportServiceImpl implements LogImportService{
         }catch (Exception e){
             return false;
         }
+    }
+
+    @Override
+    public Page<LogImport> getAll(Integer pageNo) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
+        return logImportRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<LogImport> searchLogImport(String keyword, Integer pageNo) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNo - 1, 5, sort);
+        return logImportRepository.findAllByFileNameContainingIgnoreCase(keyword, pageable);
     }
 
     private Timestamp getTimeNow(){

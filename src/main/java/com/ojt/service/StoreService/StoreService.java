@@ -1,5 +1,6 @@
 package com.ojt.service.StoreService;
 
+import com.ojt.model.dto.request.StoreStatistical;
 import com.ojt.model.entity.Store;
 import org.springframework.data.domain.Page;
 
@@ -11,4 +12,5 @@ public interface StoreService {
     Store findByAddress(Store store);
     Page<Store> getAll (Integer pageNo);
     Page<Store> searchStore(String keyword, Integer pageNo);
+
 }

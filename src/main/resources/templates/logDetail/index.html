@@ -80,32 +80,9 @@
                 <div class="card-body p-0 ms-5 me-5"
                      style="height: 70px; line-height: 70px; display: flex; justify-content: space-between">
                     <div class="tbl-caption">
-                        <h3 class="heading mb-0" style="line-height: 70px"><strong th:text="${detail.fileName}"></strong></h3>
+                        <h3 class="heading mb-0" style="line-height: 70px"><strong th:text="${logImport.fileName}"></strong></h3>
                     </div>
                     <div class="header-right d-flex align-items-center">
-                        <form th:action="@{/admin/category}" method="get">
-                            <div class="input-group search-area ">
-                                <input type="text" class="form-control border rounded-start" name="search"
-                                       placeholder="Tìm kiếm ...">
-                                <span class="input-group-text border rounded-end "><a href="javascript:void(0)">
-                                <svg width="24" height="24" viewBox="0 0 24 24"
-                                     fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0_1_450)">
-                                        <path opacity="0.3"
-                                              d="M14.2929 16.7071C13.9024 16.3166 13.9024 15.6834 14.2929 15.2929C14.6834 14.9024 15.3166 14.9024 15.7071 15.2929L19.7071 19.2929C20.0976 19.6834 20.0976 20.3166 19.7071 20.7071C19.3166 21.0976 18.6834 21.0976 18.2929 20.7071L14.2929 16.7071Z"
-                                              fill="#452B90"/>
-                                        <path d="M11 16C13.7614 16 16 13.7614 16 11C16 8.23859 13.7614 6.00002 11 6.00002C8.23858 6.00002 6 8.23859 6 11C6 13.7614 8.23858 16 11 16ZM11 18C7.13401 18 4 14.866 4 11C4 7.13402 7.13401 4.00002 11 4.00002C14.866 4.00002 18 7.13402 18 11C18 14.866 14.866 18 11 18Z"
-                                              fill="#452B90"/>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_1_450">
-                                            <rect width="24" height="24" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </a></span>
-                            </div>
-                        </form>
                         <a th:href="@{/fileHistory}">
                             <button type="button" class="btn btn-info"><span
                                     class="btn-icon-start text-info"><i class="fa-solid fa-arrow-left"></i>
@@ -127,7 +104,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="de: ${detail.logDetails}">
+                            <tr th:each="de: ${detail}">
                                 <td th:text="${de.id}"><strong></strong></td>
                                 <td class="text-center text-danger" th:text="${de.nameError}"></td>
                                 <td class="text-center" th:text="${de.lineError}"></td>
@@ -135,31 +112,34 @@
                             </tbody>
                         </table>
 
-                        <!--                        <div class="d-flex justify-content-end mt-3 me-5">-->
-                        <!--                            <nav aria-label="Điều hướng trang">-->
-                        <!--                                <ul class="pagination">-->
-                        <!--                                    <li class="page-item ">-->
-                        <!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage > 1 ? currentPage - 1 : 1)}}" aria-label="Trước">-->
-                        <!--                                            <span aria-hidden="true" class="text-danger">&laquo;</span>-->
-                        <!--                                        </a>-->
-                        <!--                                    </li>-->
+                        <div class="d-flex justify-content-end mt-3 me-5">
+                            <nav aria-label="Điều hướng trang">
+                                <ul class="pagination">
+                                    <li class="page-item" th:if="${currentPage > 1}">
+                                        <a class="page-link" th:href="@{'?pageNo=' + ${currentPage - 1}}"
+                                           aria-label="Trước">
+                                            <span aria-hidden="true" class="text-danger">&laquo;</span>
+                                        </a>
+                                    </li>
 
-                        <!--                                    <ul th:each="i : ${#numbers.sequence(1, totalPage)}">-->
-                        <!--                                        <li class="page-item" th:classappend="${i == currentPage ? 'active' : ''}">-->
-                        <!--                                            <a class="page-link" th:href="@{${'/admin/category/' + i}}">-->
-                        <!--                                                <span class="text-success" th:text="${i}"></span>-->
-                        <!--                                            </a>-->
-                        <!--                                        </li>-->
-                        <!--                                    </ul>-->
+                                    <ul th:each="i : ${#numbers.sequence(1, totalPage)}">
+                                        <li class="page-item" th:classappend="${i == currentPage ? 'active' : ''}">
+                                            <a class="page-link"
+                                               th:href="@{${keyword != null && keyword != '' ? '?keyword=' + keyword + '&' : '?' } +'pageNo=' + ${i}}">
+                                                <span class="text-success" th:text="${i}"></span>
+                                            </a>
+                                        </li>
+                                    </ul>
 
-                        <!--                                    <li class="page-item">-->
-                        <!--                                        <a class="page-link" th:href="@{${'/admin/category/' + (currentPage < totalPage ? currentPage + 1 : totalPage)}}" aria-label="Tiếp theo">-->
-                        <!--                                            <span aria-hidden="true" class="text-danger">&raquo;</span>-->
-                        <!--                                        </a>-->
-                        <!--                                    </li>-->
-                        <!--                                </ul>-->
-                        <!--                            </nav>-->
-                        <!--                        </div>-->
+                                    <li class="page-item" th:if="${currentPage < totalPage}">
+                                        <a class="page-link" th:href="@{'?pageNo=' + ${currentPage + 1}}"
+                                           aria-label="Tiếp theo">
+                                            <span aria-hidden="true" class="text-danger">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
 
                     </div>
                 </div>

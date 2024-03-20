@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AuthController {
@@ -24,14 +25,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute("user") SignInRequest user){
+    public String login(@ModelAttribute("user") SignInRequest user, RedirectAttributes redirectAttributes){
         if (userService.signIn(user)){
             return "redirect:/";
         }
+        redirectAttributes.addFlashAttribute("err", "Tên đăng nhập hoặc mật khẩu của bạn không khớp");
         return "redirect:/login";
     }
-    @RequestMapping("/abc")
-    public String dddsa(){
-        return "statistics/statistics-by-month";
+
+    @RequestMapping("/logout")
+    public String logout() {
+        httpSession.removeAttribute("userLogin");
+        return "redirect:/login";
     }
+
+
 }

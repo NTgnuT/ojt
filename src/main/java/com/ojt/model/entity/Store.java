@@ -24,4 +24,6 @@ public class Store {
     private String district;
     private String city;
     private Date createDate;
+
+
 }

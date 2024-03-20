@@ -4,6 +4,7 @@ import com.ojt.model.entity.OrderDetails;
 import com.ojt.model.entity.Orders;
 import com.ojt.service.OrderDetailService.OrderDetailService;
 import com.ojt.service.OrderService.OrderService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -19,12 +20,17 @@ import java.util.List;
 @Controller
 public class OrderController {
     @Autowired
+    private HttpSession httpSession;
+    @Autowired
     private OrderService orderService;
     @Autowired
     private OrderDetailService orderDetailService;
     @RequestMapping("/order")
     public String home (Model model, @Param("keyword") String keyword,
                         @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
+        if (httpSession.getAttribute("userLogin") == null) {
+            return "redirect:/login";
+        }
         Page<Orders> orders = orderService.getAll(pageNo);
         if (keyword != null) {
             orders = orderService.searchOrders(keyword, pageNo);
@@ -58,16 +64,11 @@ public class OrderController {
 
     @GetMapping("/orderDetail/{id}")
     public String orderDetail(@PathVariable("id") Long id, Model model,
-                              @Param("keyword") String keyword,
                               @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo) {
         Orders orders = orderService.findById(id);
 
         Page<OrderDetails> orderDetails = orderDetailService.getAll(orders, pageNo);
-        if (keyword != null) {
-            orderDetails = orderDetailService.searchOrderDetail(keyword, pageNo);
-        }
 
-        model.addAttribute("keyword", keyword);
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPage", orderDetails.getTotalPages());
 

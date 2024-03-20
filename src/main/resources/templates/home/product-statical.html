@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
@@ -80,13 +81,12 @@
                 <div class="card-body p-0 ms-5 me-5"
                      style="height: 70px; line-height: 70px; display: flex; justify-content: space-between">
                     <div class="tbl-caption">
-                        <h3 class="heading mb-0" style="line-height: 70px"><strong>Chi tiết đơn hàng</strong></h3>
+                        <h3 class="heading mb-0" style="line-height: 70px"><strong>Thống kê sản phẩm</strong></h3>
                     </div>
-                    <div class="header-right d-flex align-items-center">
-<!--                        <form method="get">-->
+<!--                    <div class="header-right d-flex align-items-center">-->
+<!--                        <form th:action="@{/admin/category}" method="get">-->
 <!--                            <div class="input-group search-area ">-->
-<!--                                <input type="text" class="form-control border rounded-start" name="keyword"-->
-<!--                                       th:value="${keyword}"-->
+<!--                                <input type="text" class="form-control border rounded-start" name="search"-->
 <!--                                       placeholder="Tìm kiếm ...">-->
 <!--                                <span class="input-group-text border rounded-end "><a href="javascript:void(0)">-->
 <!--                                <svg width="24" height="24" viewBox="0 0 24 24"-->
@@ -107,13 +107,13 @@
 <!--                            </a></span>-->
 <!--                            </div>-->
 <!--                        </form>-->
-                        <a th:href="@{/order}">
-                            <button type="button" class="btn btn-info"><span
-                                    class="btn-icon-start text-info"><i class="fa-solid fa-arrow-left"></i>
-                                                            </span>Quay lại
-                            </button>
-                        </a>
-                    </div>
+<!--                    </div>-->
+                    <a href="/productStatisticalExport">
+                        <label class="file-label btn btn-info mt-2">
+                            <span class="btn-icon-start text-info"><i class="fa-solid fa-file-export"></i></span>
+                            Xuất file
+                        </label>
+                    </a>
                 </div>
             </div>
             <div class="card">
@@ -122,18 +122,18 @@
                         <table class="table table-responsive-md text-center ">
                             <thead>
                             <tr>
+                                <th><strong>ID</strong></th>
                                 <th><strong>Tên sản phẩm</strong></th>
-                                <th><strong>ID sản phẩm</strong></th>
-                                <th><strong>Giá</strong></th>
-                                <th><strong>Số lượng</strong></th>
+                                <th><strong>Tổng sản phẩm đã bán</strong></th>
+                                <th><strong>Tổng Tiền thu  </strong></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="detail: ${orderDetail}">
-                                <td class="text-center" th:text="${detail.product.productName}"></td>
-                                <td class="text-center" th:text="${detail.product.productId}"><strong></strong></td>
-                                <td class="text-center" th:text="${detail.price}"></td>
-                                <td class="text-center" th:text="${detail.quantity}"></td>
+                            <tr th:each="t: ${productList}">
+                                <td th:text="${t.productId}"><strong></strong></td>
+                                <td class="text-center" th:text="${t.productName}"></td>
+                                <td class="text-center" th:text="${t.productSellTotal}"></td>
+                                <td class="text-center" th:text="${t.productsPriceTotal}"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -179,6 +179,8 @@
 <th:block th:insert="~{layouts/script.html}"></th:block>
 
 </body>
-
 </html>
 
+
+</body>
+</html>

@@ -79,6 +79,9 @@
                 />
               </div>
             </div>
+            <div th:if="${err != null}" class="alert alert-danger mb--15" role="alert">
+              <strong><span th:text="${err}"></span></strong>
+            </div>
             <div class="row">
               <div class="col-md-6 col-sm-6">
                 <label class="custom_check">

@@ -17,7 +17,6 @@ public class UserServiceImpl implements UserService{
        User user = userRepository.findByUsername(signInRequest.getUsername()).orElse(null);
        if (user != null){
            if (user.getPassword().equals(signInRequest.getPassword())){
-//               System.out.println("dsdsd");
                httpSession.setAttribute("userLogin", user);
                return true;
            }

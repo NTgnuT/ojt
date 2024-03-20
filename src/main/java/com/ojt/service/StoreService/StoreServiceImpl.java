@@ -1,5 +1,6 @@
 package com.ojt.service.StoreService;
 
+import com.ojt.model.dto.request.StoreStatistical;
 import com.ojt.model.entity.Store;
 import com.ojt.responsitoty.StoreRepository;
 import com.ojt.service.LogImportService.LogImportService;
